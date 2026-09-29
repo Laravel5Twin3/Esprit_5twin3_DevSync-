@@ -13,15 +13,14 @@ adaptés (économie d'énergie, hydratation, gestion des équipements sensibles)
 
 ## Modules
 
-| Module | Responsable | Entités (min. 2 liées) | Branche |
-|---|---|---|---|
-| Utilisateurs (commun) | Toute l'équipe | `User` | — |
-| Coupures d'électricité | … | ex. `Coupure` ↔ `Zone` | `feature/coupures` |
-| Alertes météo | … | … | `feature/alertes-meteo` |
-| Points de fraîcheur | … | … | `feature/points-fraicheur` |
-| Conseils | … | … | `feature/conseils` |
-
-> Complétez ce tableau avec les noms et les entités de chacun.
+| # | Module | Branche |
+|---|---|---|
+| — | Utilisateurs (commun) | — |
+| 1 | Alertes météo / canicule | `feature/alertes-meteo` |
+| 2 | Coupures de courant | `feature/coupures` |
+| 3 | Points de fraîcheur | `feature/points-fraicheur` |
+| 4 | Conseils et prévention | `feature/conseils` |
+| 5 | Entraide entre voisins | `feature/entraide` |
 
 ---
 
@@ -47,24 +46,26 @@ php artisan serve
 
 Ouvrir http://127.0.0.1:8000
 
-| Compte | Email | Mot de passe |
-|---|---|---|
-| Admin (Back Office) | `admin@heatalert.tn` | `password` |
-| Citoyen (Front Office) | `citoyen@heatalert.tn` | `password` |
+
+| Compte                 | Email                  | Mot de passe |
+| ---------------------- | ---------------------- | ------------ |
+| Admin (Back Office)    | `admin@heatalert.tn`   | `password`   |
+| Citoyen (Front Office) | `citoyen@heatalert.tn` | `password`   |
 
 ---
 
 ## Architecture commune (déjà en place)
 
-| Élément | Emplacement |
-|---|---|
-| Layout Front Office | `resources/views/layouts/front.blade.php` |
-| Layout Back Office | `resources/views/layouts/back.blade.php` |
-| Partials | `resources/views/front/partials/`, `resources/views/back/partials/` |
-| Composants Blade | `resources/views/components/` → `<x-card>`, `<x-flash>`, `<x-delete-button>`, `<x-form.input>`, `<x-form.select>`, `<x-form.textarea>`, `<x-back.stat-card>` |
-| Auth (login / register / logout) | `app/Http/Controllers/Auth/AuthController.php` |
-| Rôles | colonne `users.role` (`admin` / `citoyen`), middleware `admin` |
-| Routes admin | préfixe `/admin`, noms `admin.*`, middleware `['auth', 'admin']` |
+
+| Élément                        | Emplacement                                                                                                                                                   |
+| -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Layout Front Office              | `resources/views/layouts/front.blade.php`                                                                                                                     |
+| Layout Back Office               | `resources/views/layouts/back.blade.php`                                                                                                                      |
+| Partials                         | `resources/views/front/partials/`, `resources/views/back/partials/`                                                                                           |
+| Composants Blade                 | `resources/views/components/` → `<x-card>`, `<x-flash>`, `<x-delete-button>`, `<x-form.input>`, `<x-form.select>`, `<x-form.textarea>`, `<x-back.stat-card>` |
+| Auth (login / register / logout) | `app/Http/Controllers/Auth/AuthController.php`                                                                                                                |
+| Rôles                           | colonne`users.role` (`admin` / `citoyen`), middleware `admin`                                                                                                 |
+| Routes admin                     | préfixe`/admin`, noms `admin.*`, middleware `['auth', 'admin']`                                                                                              |
 
 ### Sections disponibles dans les layouts
 
@@ -77,15 +78,16 @@ Ouvrir http://127.0.0.1:8000
 
 Chaque module vit dans **ses propres fichiers**. Les fichiers communs sont chargés automatiquement :
 
-| Quoi | Où créer VOTRE fichier | Chargé automatiquement ? |
-|---|---|---|
-| Routes | `routes/modules/<module>.php` | ✅ (voir `routes/modules/README.md`) |
-| Lien menu Front | `resources/views/front/menu/<module>.blade.php` | ✅ |
-| Lien menu Back | `resources/views/back/menu/<module>.blade.php` | ✅ |
-| Contrôleurs | `app/Http/Controllers/Front/…`, `app/Http/Controllers/Back/…` | — |
-| Validation | `app/Http/Requests/<Module>/…Request.php` | — |
-| Vues | `resources/views/front/<module>/`, `resources/views/back/<module>/` | — |
-| Modèles / Factories / Seeders | `app/Models/`, `database/factories/`, `database/seeders/` | — |
+
+| Quoi                           | Où créer VOTRE fichier                                            | Chargé automatiquement ?           |
+| ------------------------------ | ------------------------------------------------------------------- | ----------------------------------- |
+| Routes                         | `routes/modules/<module>.php`                                       | ✅ (voir`routes/modules/README.md`) |
+| Lien menu Front                | `resources/views/front/menu/<module>.blade.php`                     | ✅                                  |
+| Lien menu Back                 | `resources/views/back/menu/<module>.blade.php`                      | ✅                                  |
+| Contrôleurs                   | `app/Http/Controllers/Front/…`, `app/Http/Controllers/Back/…`     | —                                  |
+| Validation                     | `app/Http/Requests/<Module>/…Request.php`                          | —                                  |
+| Vues                           | `resources/views/front/<module>/`, `resources/views/back/<module>/` | —                                  |
+| Modèles / Factories / Seeders | `app/Models/`, `database/factories/`, `database/seeders/`           | —                                  |
 
 Seul fichier commun à toucher : `database/seeders/DatabaseSeeder.php` → **une seule ligne** par module
 dans `$this->call([...])`.

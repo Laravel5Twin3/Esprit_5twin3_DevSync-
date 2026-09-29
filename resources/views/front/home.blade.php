@@ -23,9 +23,10 @@
             ['icon' => 'bi-cloud-sun', 'title' => 'Alertes météo', 'text' => 'Suivez les épisodes de canicule annoncés pour votre zone.'],
             ['icon' => 'bi-lightning-charge', 'title' => 'Coupures d\'électricité', 'text' => 'Consultez et signalez les délestages et surcharges du réseau.'],
             ['icon' => 'bi-tree', 'title' => 'Points de fraîcheur', 'text' => 'Parcs, salles climatisées et fontaines accessibles à proximité.'],
-            ['icon' => 'bi-lightbulb', 'title' => 'Conseils', 'text' => 'Hydratation, économie d\'énergie, protection des équipements.'],
+            ['icon' => 'bi-lightbulb', 'title' => 'Conseils et prévention', 'text' => 'Hydratation, économie d\'énergie, protection des équipements.'],
+            ['icon' => 'bi-people', 'title' => 'Entraide entre voisins', 'text' => 'Proposez ou demandez de l\'aide aux habitants de votre quartier.'],
         ] as $feature)
-            <div class="col-md-6 col-lg-3">
+            <div class="col-md-6 col-lg">
                 <x-card class="h-100 text-center">
                     <i class="bi {{ $feature['icon'] }} ha-feature-icon"></i>
                     <h5 class="mt-3">{{ $feature['title'] }}</h5>

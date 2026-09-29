@@ -25,9 +25,13 @@ class DatabaseSeeder extends Seeder
 
         User::factory(10)->create();
 
-        // Seeders des modules : chaque membre ajoute UNE ligne pour son module.
+        // Seeders des modules : chaque membre décommente/modifie UNIQUEMENT sa ligne.
         $this->call([
-            // CoupureSeeder::class,   // Module Coupures d'électricité
+            // AlerteMeteoSeeder::class,     // 1. Alertes météo / canicule
+            // CoupureSeeder::class,         // 2. Coupures de courant
+            // PointFraicheurSeeder::class,  // 3. Points de fraîcheur
+            // ConseilSeeder::class,         // 4. Conseils et prévention
+            // EntraideSeeder::class,        // 5. Entraide entre voisins
         ]);
     }
 }
