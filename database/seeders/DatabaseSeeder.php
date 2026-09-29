@@ -1,0 +1,33 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\User;
+use Illuminate\Database\Seeder;
+
+class DatabaseSeeder extends Seeder
+{
+    /**
+     * Seed the application's database.
+     */
+    public function run(): void
+    {
+        // Comptes communs à l'équipe (mot de passe : "password")
+        User::factory()->admin()->create([
+            'name' => 'Admin HeatAlert',
+            'email' => 'admin@heatalert.tn',
+        ]);
+
+        User::factory()->create([
+            'name' => 'Citoyen Test',
+            'email' => 'citoyen@heatalert.tn',
+        ]);
+
+        User::factory(10)->create();
+
+        // Seeders des modules : chaque membre ajoute UNE ligne pour son module.
+        $this->call([
+            // CoupureSeeder::class,   // Module Coupures d'électricité
+        ]);
+    }
+}

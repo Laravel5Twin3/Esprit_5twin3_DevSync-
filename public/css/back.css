@@ -1,0 +1,54 @@
+:root {
+    --ha-sidebar-width: 250px;
+    --ha-sidebar-bg: #1f2937;
+    --ha-primary: #e8590c;
+}
+
+body { background: #f3f4f6; }
+
+.ha-admin { display: flex; min-height: 100vh; }
+
+.ha-sidebar {
+    width: var(--ha-sidebar-width);
+    background: var(--ha-sidebar-bg);
+    flex-shrink: 0;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    transition: margin-left .2s;
+}
+
+.ha-sidebar-brand {
+    display: block;
+    padding: 1.25rem 1.5rem;
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.2rem;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255, 255, 255, .1);
+}
+.ha-sidebar-brand i { color: var(--ha-primary); }
+.ha-sidebar-brand small { font-weight: 400; opacity: .6; font-size: .8rem; }
+
+.ha-sidebar .nav-link { color: #cbd5e1; padding: .65rem 1.5rem; }
+.ha-sidebar .nav-link i { margin-right: .5rem; }
+.ha-sidebar .nav-link:hover { color: #fff; background: rgba(255, 255, 255, .05); }
+.ha-sidebar .nav-link.active { color: #fff; background: var(--ha-primary); }
+
+.ha-sidebar-heading {
+    padding: 1rem 1.5rem .25rem;
+    font-size: .7rem;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: #6b7280;
+}
+
+.ha-admin-main { flex-grow: 1; min-width: 0; }
+
+.ha-topbar { height: 60px; background: #fff; box-shadow: 0 1px 3px rgba(0, 0, 0, .06); }
+
+@media (max-width: 991.98px) {
+    .ha-sidebar { position: fixed; z-index: 1040; margin-left: calc(-1 * var(--ha-sidebar-width)); }
+    .ha-admin.sidebar-open .ha-sidebar { margin-left: 0; }
+}

@@ -1,0 +1,20 @@
+:root {
+    --ha-primary: #e8590c;
+    --ha-primary-dark: #c2410c;
+    --ha-accent: #fcc419;
+}
+
+body { background: #fff8f3; }
+
+.ha-navbar { background: linear-gradient(90deg, var(--ha-primary-dark), var(--ha-primary)); }
+
+.ha-hero {
+    background: linear-gradient(135deg, var(--ha-primary-dark) 0%, var(--ha-primary) 55%, var(--ha-accent) 100%);
+}
+
+.ha-feature-icon { font-size: 2.5rem; color: var(--ha-primary); }
+
+.btn-ha { background: var(--ha-primary); border-color: var(--ha-primary); color: #fff; }
+.btn-ha:hover, .btn-ha:focus { background: var(--ha-primary-dark); border-color: var(--ha-primary-dark); color: #fff; }
+
+.ha-footer { background: #2b1a10; color: #f1e3d8; }
