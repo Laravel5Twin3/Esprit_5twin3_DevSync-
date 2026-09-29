@@ -101,8 +101,8 @@
             @endif
         </div>
         @if($points->hasPages())
-            <div class="card-footer">
-                {{ $points->links() }}
+            <div class="card-footer d-flex justify-content-end">
+                {{ $points->links('pagination::bootstrap-5') }}
             </div>
         @endif
     </div>

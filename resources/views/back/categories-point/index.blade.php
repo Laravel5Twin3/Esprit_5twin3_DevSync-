@@ -59,7 +59,7 @@
         @endif
     </div>
     @if($categories->hasPages())
-        <div class="card-footer">{{ $categories->links() }}</div>
+        <div class="card-footer d-flex justify-content-end">{{ $categories->links('pagination::bootstrap-5') }}</div>
     @endif
 </div>
 @endsection
