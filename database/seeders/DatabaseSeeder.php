@@ -14,12 +14,12 @@ class DatabaseSeeder extends Seeder
     {
         // Comptes communs à l'équipe (mot de passe : "password")
         User::factory()->admin()->create([
-            'name' => 'Admin HeatAlert',
+            'name'  => 'Admin HeatAlert',
             'email' => 'admin@heatalert.tn',
         ]);
 
         User::factory()->create([
-            'name' => 'Citoyen Test',
+            'name'  => 'Citoyen Test',
             'email' => 'citoyen@heatalert.tn',
         ]);
 
@@ -27,11 +27,12 @@ class DatabaseSeeder extends Seeder
 
         // Seeders des modules : chaque membre décommente/modifie UNIQUEMENT sa ligne.
         $this->call([
-            // AlerteMeteoSeeder::class,     // 1. Alertes météo / canicule
-            // CoupureSeeder::class,         // 2. Coupures de courant
-            // PointFraicheurSeeder::class,  // 3. Points de fraîcheur
-            // ConseilSeeder::class,         // 4. Conseils et prévention
-            // EntraideSeeder::class,        // 5. Entraide entre voisins
+            // AlerteMeteoSeeder::class,      // 1. Alertes météo / canicule
+            // CoupureSeeder::class,           // 2. Coupures de courant
+            CategoriePointSeeder::class,    // 3. Points de fraîcheur — catégories d'abord !
+            PointFraicheurSeeder::class,    // 3. Points de fraîcheur
+            // ConseilSeeder::class,           // 4. Conseils et prévention
+            // EntraideSEEDER::class,          // 5. Entraide entre voisins
         ]);
     }
 }
