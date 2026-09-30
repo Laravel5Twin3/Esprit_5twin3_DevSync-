@@ -89,6 +89,7 @@ Chaque module vit dans **ses propres fichiers**. Les fichiers communs sont charg
 | Routes                         | `routes/modules/<module>.php`                                       | ✅ (voir`routes/modules/README.md`) |
 | Lien menu Front                | `resources/views/front/menu/<module>.blade.php`                     | ✅                                  |
 | Lien menu Back                 | `resources/views/back/menu/<module>.blade.php`                      | ✅                                  |
+| Bloc du tableau de bord admin  | `resources/views/back/dashboard/<module>.blade.php`                 | ✅                                  |
 | Contrôleurs                   | `app/Http/Controllers/Front/…`, `app/Http/Controllers/Back/…`     | —                                  |
 | Validation                     | `app/Http/Requests/<Module>/…Request.php`                          | —                                  |
 | Vues                           | `resources/views/front/<module>/`, `resources/views/back/<module>/` | —                                  |
