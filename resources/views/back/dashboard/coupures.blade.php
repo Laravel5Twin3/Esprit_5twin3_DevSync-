@@ -1,0 +1,1 @@
+<x-coupure.statistiques-dashboard />

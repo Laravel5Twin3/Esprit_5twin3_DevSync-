@@ -2,8 +2,15 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "build": "vite build",
-        "dev": "vite"
+        "setup": "composer install && php -r \"file_exists('.env') || copy('.env.example', '.env');\" && php artisan key:generate && php artisan migrate:fresh --seed",
+        "dev": "php artisan serve",
+        "start": "php artisan serve",
+        "db:fresh": "php artisan migrate:fresh --seed",
+        "update": "composer install && php artisan optimize:clear && php artisan migrate:fresh --seed",
+        "clear": "php artisan optimize:clear",
+        "routes": "php artisan route:list --except-vendor",
+        "vite:dev": "vite",
+        "build": "vite build"
     },
     "devDependencies": {
         "@tailwindcss/vite": "^4.0.0",

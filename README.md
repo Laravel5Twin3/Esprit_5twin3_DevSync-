@@ -26,25 +26,30 @@ adaptés (économie d'énergie, hydratation, gestion des équipements sensibles)
 
 ## Installation (chaque membre)
 
-Prérequis : PHP ≥ 8.2, Composer, XAMPP (MySQL démarré).
+Prérequis : PHP ≥ 8.2, Composer, Node/npm, XAMPP (MySQL démarré).
+
+1. Créer la base **`heatalert`** dans phpMyAdmin (interclassement `utf8mb4_unicode_ci`).
+2. Puis :
 
 ```bash
 git clone <url-du-repo>
 cd Esprit_5twin3_DevSync-
-composer install
-cp .env.example .env          # Windows PowerShell : copy .env.example .env
-php artisan key:generate
-```
-
-1. Créer la base **`heatalert`** dans phpMyAdmin (interclassement `utf8mb4_unicode_ci`).
-2. Lancer les migrations + données de test :
-
-```bash
-php artisan migrate:fresh --seed
-php artisan serve
+npm run setup     # composer install + .env + clé + migrations + données de test (une seule fois)
+npm run dev       # lance le serveur
 ```
 
 Ouvrir http://127.0.0.1:8000
+
+### Commandes npm
+
+| Commande | Rôle |
+|---|---|
+| `npm run setup` | Première installation (composer install, `.env`, clé, base + données) |
+| `npm run dev` / `npm start` | Lance le serveur sur http://127.0.0.1:8000 |
+| `npm run db:fresh` | Recrée la base et relance les seeders |
+| `npm run update` | Après un `git pull` : composer install + vide les caches + recrée la base |
+| `npm run clear` | Vide les caches (config, routes, vues) |
+| `npm run routes` | Liste les routes du projet |
 
 
 | Compte                 | Email                  | Mot de passe |
@@ -84,6 +89,7 @@ Chaque module vit dans **ses propres fichiers**. Les fichiers communs sont charg
 | Routes                         | `routes/modules/<module>.php`                                       | ✅ (voir`routes/modules/README.md`) |
 | Lien menu Front                | `resources/views/front/menu/<module>.blade.php`                     | ✅                                  |
 | Lien menu Back                 | `resources/views/back/menu/<module>.blade.php`                      | ✅                                  |
+| Bloc du tableau de bord admin  | `resources/views/back/dashboard/<module>.blade.php`                 | ✅                                  |
 | Contrôleurs                   | `app/Http/Controllers/Front/…`, `app/Http/Controllers/Back/…`     | —                                  |
 | Validation                     | `app/Http/Requests/<Module>/…Request.php`                          | —                                  |
 | Vues                           | `resources/views/front/<module>/`, `resources/views/back/<module>/` | —                                  |
@@ -129,5 +135,5 @@ git merge main
 # 4. Intégrer : ouvrir une Pull Request feature/<module> -> main sur GitHub
 ```
 
-Après chaque `git pull` : `composer install` puis `php artisan migrate:fresh --seed`
-(de nouvelles migrations ont pu être ajoutées par les autres).
+Après chaque `git pull` : `npm run update`
+(de nouvelles migrations ou dépendances ont pu être ajoutées par les autres).
