@@ -11,6 +11,20 @@
     </section>
 @endsection
 
+{{-- Filtres actifs aux couleurs du thème HeatAlert (orange) au lieu du bleu Bootstrap --}}
+@push('styles')
+    <style>
+        .ha-alertes-filtres .list-group-item.active {
+            background-color: var(--ha-primary);
+            border-color: var(--ha-primary);
+            color: #fff;
+        }
+        .ha-alertes-filtres .list-group-item:not(.active):hover {
+            color: var(--ha-primary-dark);
+        }
+    </style>
+@endpush
+
 @section('content')
     {{-- Bandeau : alerte la plus grave en cours --}}
     @if ($alertePrincipale)
@@ -28,7 +42,7 @@
 
     <div class="row g-4">
         {{-- Colonne filtres --}}
-        <aside class="col-lg-3">
+        <aside class="col-lg-3 ha-alertes-filtres">
             <x-card title="Période">
                 <div class="list-group list-group-flush">
                     <a href="{{ route('alertes-meteo.index', ['periode' => 'actives'] + request()->only('zone_id', 'niveau_id')) }}"
