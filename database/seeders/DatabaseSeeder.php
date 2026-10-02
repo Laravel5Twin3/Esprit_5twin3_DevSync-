@@ -27,8 +27,8 @@ class DatabaseSeeder extends Seeder
 
         // Seeders des modules : chaque membre décommente/modifie UNIQUEMENT sa ligne.
         $this->call([
-            // AlerteMeteoSeeder::class,      // 1. Alertes météo / canicule
             ZoneSeeder::class,              // 2. Coupures de courant — zones d'abord !
+            AlerteMeteoSeeder::class,       // 1. Alertes météo / canicule (après les zones)
             CoupureSeeder::class,           // 2. Coupures de courant
             SignalementSeeder::class,       // 2. Coupures de courant — signalements des habitants
             CategoriePointSeeder::class,    // 3. Points de fraîcheur — catégories d'abord !
