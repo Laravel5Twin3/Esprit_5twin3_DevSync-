@@ -7,6 +7,7 @@ use App\Http\Requests\AlerteMeteo\AlerteMeteoRequest;
 use App\Models\AlerteMeteo;
 use App\Models\NiveauVigilance;
 use App\Models\Zone;
+use App\Services\AlerteMeteo\PrevisionChaleurService;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -45,6 +46,32 @@ class AlerteMeteoController extends Controller
         ]);
 
         return view('back.alertes-meteo.create', $this->donneesFormulaire($alerte));
+    }
+
+    /**
+     * Valeur ajoutée : pré-remplit le formulaire de création à partir des
+     * prévisions météo réelles de la zone (jour le plus chaud des 7 prochains jours).
+     */
+    public function generer(Request $request, PrevisionChaleurService $meteo): View|RedirectResponse
+    {
+        $request->validate(
+            ['zone_id' => ['required', 'exists:zones,id']],
+            ['zone_id.required' => 'Choisissez une zone pour générer l\'alerte.', 'zone_id.exists' => 'Zone invalide.'],
+        );
+        $zone = Zone::findOrFail($request->zone_id);
+
+        try {
+            $previsions = $meteo->previsions($zone);
+        } catch (\Throwable) {
+            return back()->with('error', 'Impossible de récupérer les prévisions météo pour le moment. Réessayez plus tard.');
+        }
+
+        $alerte = new AlerteMeteo($meteo->suggestion($zone, $previsions));
+
+        return view('back.alertes-meteo.create', $this->donneesFormulaire($alerte) + [
+            'previsions' => $previsions,
+            'zoneGeneree' => $zone,
+        ]);
     }
 
     public function store(AlerteMeteoRequest $request): RedirectResponse

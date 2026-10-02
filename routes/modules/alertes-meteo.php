@@ -15,6 +15,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     Route::resource('niveaux-vigilance', NiveauVigilanceController::class)
         ->parameters(['niveaux-vigilance' => 'niveau']);
 
+    // Génération d'une alerte depuis les prévisions Open-Meteo (avant le resource !)
+    Route::get('alertes-meteo/generer', [BackAlerteMeteoController::class, 'generer'])->name('alertes-meteo.generer');
+
     // CRUD des alertes météo : admin.alertes-meteo.*
     Route::resource('alertes-meteo', BackAlerteMeteoController::class)
         ->parameters(['alertes-meteo' => 'alerte']);

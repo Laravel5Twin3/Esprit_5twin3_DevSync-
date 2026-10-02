@@ -5,6 +5,7 @@
 
 @section('page-actions')
     <a href="{{ route('admin.alertes-meteo.create') }}" class="btn btn-primary btn-sm"><i class="bi bi-plus-lg"></i> Nouvelle alerte</a>
+    <a href="{{ route('admin.alertes-meteo.create') }}#zone_generer" class="btn btn-outline-primary btn-sm ms-2"><i class="bi bi-cloud-sun"></i> Depuis la météo</a>
     <a href="{{ route('admin.niveaux-vigilance.index') }}" class="btn btn-outline-secondary btn-sm ms-2"><i class="bi bi-thermometer-half"></i> Niveaux</a>
 @endsection
 
