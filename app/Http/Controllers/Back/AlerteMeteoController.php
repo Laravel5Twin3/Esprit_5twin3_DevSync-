@@ -17,11 +17,22 @@ class AlerteMeteoController extends Controller
     {
         $alertes = AlerteMeteo::query()
             ->with(['niveauVigilance', 'zone']) // eager loading : évite le problème N+1
+            ->when($request->filled('q'), fn ($q) => $q->where(function ($q) use ($request) {
+                $q->where('titre', 'like', '%'.$request->q.'%')
+                    ->orWhere('message', 'like', '%'.$request->q.'%');
+            }))
+            ->when($request->filled('zone_id'), fn ($q) => $q->where('zone_id', $request->zone_id))
+            ->when($request->filled('niveau_id'), fn ($q) => $q->where('niveau_vigilance_id', $request->niveau_id))
+            ->statut($request->input('statut'))
             ->latest('date_debut')
             ->paginate(10)
             ->withQueryString();
 
-        return view('back.alertes-meteo.index', compact('alertes'));
+        return view('back.alertes-meteo.index', [
+            'alertes' => $alertes,
+            'zones' => Zone::orderBy('nom')->pluck('nom', 'id'),
+            'niveaux' => NiveauVigilance::orderBy('ordre')->pluck('nom', 'id'),
+        ]);
     }
 
     public function create(Request $request): View

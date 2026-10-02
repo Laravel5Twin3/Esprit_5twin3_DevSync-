@@ -9,6 +9,47 @@
 @endsection
 
 @section('content')
+    {{-- Filtres --}}
+    <form method="GET" class="card card-body shadow-sm border-0 mb-4">
+        <div class="row g-2 align-items-end">
+            <div class="col-md-3">
+                <label class="form-label small">Recherche</label>
+                <input type="search" name="q" value="{{ request('q') }}" class="form-control" placeholder="Titre ou message">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label small">Zone</label>
+                <select name="zone_id" class="form-select">
+                    <option value="">Toutes</option>
+                    @foreach ($zones as $id => $nom)
+                        <option value="{{ $id }}" @selected(request('zone_id') == $id)>{{ $nom }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label small">Niveau</label>
+                <select name="niveau_id" class="form-select">
+                    <option value="">Tous</option>
+                    @foreach ($niveaux as $id => $nom)
+                        <option value="{{ $id }}" @selected(request('niveau_id') == $id)>{{ $nom }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label class="form-label small">Statut</label>
+                <select name="statut" class="form-select">
+                    <option value="">Tous</option>
+                    @foreach (App\Models\AlerteMeteo::STATUTS as $value => $label)
+                        <option value="{{ $value }}" @selected(request('statut') === $value)>{{ $label }}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div class="col-md-2 d-flex gap-2">
+                <button class="btn btn-dark flex-grow-1" type="submit"><i class="bi bi-funnel"></i> Filtrer</button>
+                <a href="{{ route('admin.alertes-meteo.index') }}" class="btn btn-outline-secondary" title="Réinitialiser"><i class="bi bi-x-lg"></i></a>
+            </div>
+        </div>
+    </form>
+
     <div class="card shadow-sm border-0">
         <div class="card-header bg-white d-flex justify-content-between align-items-center">
             <span class="fw-semibold">Liste des alertes</span>
