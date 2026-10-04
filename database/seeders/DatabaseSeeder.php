@@ -33,7 +33,8 @@ class DatabaseSeeder extends Seeder
             SignalementSeeder::class,       // 2. Coupures de courant — signalements des habitants
             CategoriePointSeeder::class,    // 3. Points de fraîcheur — catégories d'abord !
             PointFraicheurSeeder::class,    // 3. Points de fraîcheur
-            // ConseilSeeder::class,           // 4. Conseils et prévention
+            CategorieConseilSeeder::class,  // 4. Conseils et prévention — catégories d'abord !
+            ConseilSeeder::class,           // 4. Conseils et prévention
             // EntraideSEEDER::class,          // 5. Entraide entre voisins
             HelpOfferSeeder::class,
             HelpRequestSeeder::class,
