@@ -35,6 +35,9 @@ class DatabaseSeeder extends Seeder
             PointFraicheurSeeder::class,    // 3. Points de fraîcheur
             // ConseilSeeder::class,           // 4. Conseils et prévention
             // EntraideSEEDER::class,          // 5. Entraide entre voisins
+            HelpOfferSeeder::class,
+            HelpRequestSeeder::class,
+            HelpResponseSeeder::class,
         ]);
     }
 }
