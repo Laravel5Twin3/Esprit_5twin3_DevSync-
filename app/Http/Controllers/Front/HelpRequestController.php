@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
 use App\Models\HelpRequest;
+use App\Services\Entraide\MiseEnRelationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -80,16 +81,21 @@ class HelpRequestController extends Controller
             );
     }
 
-    public function show(HelpRequest $helpRequest)
+    public function show(HelpRequest $helpRequest, MiseEnRelationService $miseEnRelation)
     {
         $helpRequest->load([
             'user',
             'responses.user',
         ]);
 
+        // IA : offres de voisins les plus compatibles avec cette demande
+        $suggestions = $helpRequest->status === 'open'
+            ? $miseEnRelation->offresPour($helpRequest)
+            : collect();
+
         return view(
             'front.entraide.demandes.show',
-            compact('helpRequest')
+            compact('helpRequest', 'suggestions')
         );
     }
 

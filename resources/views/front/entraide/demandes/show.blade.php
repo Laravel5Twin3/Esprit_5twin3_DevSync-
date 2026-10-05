@@ -411,6 +411,11 @@
 
             </x-card>
 
+            {{-- IA : mise en relation avec les offres compatibles --}}
+            @if ($helpRequest->status === 'open')
+                <x-entraide.suggestions :suggestions="$suggestions" type="offres" />
+            @endif
+
         </div>
 
     </div>
