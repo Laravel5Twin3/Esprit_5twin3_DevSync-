@@ -1,0 +1,1 @@
+<x-conseil.statistiques-dashboard />
