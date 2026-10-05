@@ -184,6 +184,11 @@
 
             </x-card>
 
+            {{-- IA : mise en relation avec les demandes compatibles --}}
+            @if ($helpOffer->status === 'active')
+                <x-entraide.suggestions :suggestions="$suggestions" type="demandes" />
+            @endif
+
         </div>
 
     </div>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
 use App\Models\HelpOffer;
+use App\Services\Entraide\MiseEnRelationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -89,13 +90,18 @@ class HelpOfferController extends Controller
     /**
      * Afficher une offre.
      */
-    public function show(HelpOffer $helpOffer)
+    public function show(HelpOffer $helpOffer, MiseEnRelationService $miseEnRelation)
     {
         $helpOffer->load('user');
 
+        // IA : demandes de voisins auxquelles cette offre pourrait répondre
+        $suggestions = $helpOffer->status === 'active'
+            ? $miseEnRelation->demandesPour($helpOffer)
+            : collect();
+
         return view(
             'front.entraide.offres.show',
-            compact('helpOffer')
+            compact('helpOffer', 'suggestions')
         );
     }
 

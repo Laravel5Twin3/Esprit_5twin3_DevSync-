@@ -78,31 +78,7 @@
 
                         <ul class="dropdown-menu dropdown-menu-end">
 
-                            {{-- Demander de l'aide --}}
-                            <li>
-                                <a
-                                    class="dropdown-item"
-                                    href="{{ route('help-requests.create') }}"
-                                >
-                                    <i class="bi bi-hand-index-thumb me-2"></i>
-                                    Demander de l'aide
-                                </a>
-                            </li>
-
-                            {{-- Proposer son aide --}}
-                            <li>
-                                <a
-                                    class="dropdown-item"
-                                    href="{{ route('help-offers.create') }}"
-                                >
-                                    <i class="bi bi-hand-thumbs-up me-2"></i>
-                                    Proposer mon aide
-                                </a>
-                            </li>
-
-                            <li>
-                                <hr class="dropdown-divider">
-                            </li>
+                            {{-- Les liens propres à un module vont dans son menu (resources/views/front/menu/), pas ici --}}
 
                             {{-- Déconnexion --}}
                             <li>
