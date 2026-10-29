@@ -59,4 +59,7 @@
             </x-card>
         </div>
     </div>
+
+    {{-- Assistant canicule (chatbot) --}}
+    <x-alerte-meteo.assistant />
 @endsection

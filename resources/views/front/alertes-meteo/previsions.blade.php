@@ -101,6 +101,9 @@
         </div>
     @endif
 
+
+    {{-- Assistant canicule (chatbot) --}}
+    <x-alerte-meteo.assistant />
 @endsection
 
 @if ($previsions->isNotEmpty())

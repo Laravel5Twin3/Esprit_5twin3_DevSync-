@@ -4,11 +4,16 @@ use App\Http\Controllers\Back\AlerteMeteoController as BackAlerteMeteoController
 use App\Http\Controllers\Back\NiveauVigilanceController;
 use App\Http\Controllers\Back\StatistiquesAlerteMeteoController;
 use App\Http\Controllers\Front\AlerteMeteoController as FrontAlerteMeteoController;
+use App\Http\Controllers\Front\AssistantCaniculeController;
 use Illuminate\Support\Facades\Route;
 
 // ─── Front Office ──────────────────────────────────────────────────────────
 Route::get('/alertes-meteo', [FrontAlerteMeteoController::class, 'index'])->name('alertes-meteo.index');
 Route::get('/alertes-meteo/previsions', [FrontAlerteMeteoController::class, 'previsions'])->name('alertes-meteo.previsions');
+
+// Assistant canicule (chatbot) : 20 questions par minute maximum
+Route::post('/alertes-meteo/assistant', [AssistantCaniculeController::class, 'repondre'])
+    ->middleware('throttle:20,1')->name('alertes-meteo.assistant');
 Route::get('/alertes-meteo/{alerte}', [FrontAlerteMeteoController::class, 'show'])->whereNumber('alerte')->name('alertes-meteo.show');
 
 // ─── Back Office (admin) ───────────────────────────────────────────────────
