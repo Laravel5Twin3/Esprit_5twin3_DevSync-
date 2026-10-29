@@ -66,7 +66,7 @@
         {{-- Graphique --}}
         <x-card title="Températures prévues à {{ $zone->nom }}">
             <div style="position: relative; height: 360px">
-                <canvas id="graphique-previsions" aria-label="Graphique des températures prévues" role="img"></canvas>
+                <canvas id="graphique-previsions" aria-label="Graphique des températures prévues">Graphique des températures maximales et ressenties des 7 prochains jours.</canvas>
             </div>
             <p class="small text-muted mt-2 mb-0">
                 <i class="bi bi-info-circle"></i> Les lignes pointillées sont les seuils des niveaux de vigilance.

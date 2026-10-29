@@ -28,13 +28,13 @@ class AlerteMeteoSeeder extends Seeder
             AlerteMeteo::factory()->enCours()->create(['zone_id' => $zone->id]);
             AlerteMeteo::factory()->create([
                 'zone_id' => $zone->id,
-                'date_debut' => now()->addDays(rand(1, 5)),
-                'date_fin' => now()->addDays(rand(6, 9)),
+                'date_debut' => now()->addDays(fake()->numberBetween(1, 5)),
+                'date_fin' => now()->addDays(fake()->numberBetween(6, 9)),
             ]);
             AlerteMeteo::factory()->terminee()->create(['zone_id' => $zone->id]);
 
             // Historique de l'été précédent (pour les statistiques par zone)
-            AlerteMeteo::factory()->historique()->count(rand(2, 6))->create(['zone_id' => $zone->id]);
+            AlerteMeteo::factory()->historique()->count(fake()->numberBetween(2, 6))->create(['zone_id' => $zone->id]);
         });
 
         // Quelques alertes réalistes pour la démo
