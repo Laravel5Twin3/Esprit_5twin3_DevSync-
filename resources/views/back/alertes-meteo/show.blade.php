@@ -5,7 +5,7 @@
 
 @section('page-actions')
     <a href="{{ route('admin.alertes-meteo.index') }}" class="btn btn-outline-secondary btn-sm"><i class="bi bi-arrow-left"></i> Alertes</a>
-    <a href="{{ route('alertes-meteo.fiche', $alerte) }}" class="btn btn-outline-dark btn-sm ms-2" target="_blank"><i class="bi bi-file-earmark-pdf"></i> Fiche PDF</a>
+    <a href="{{ route('alertes-meteo.fiche', $alerte) }}" class="btn btn-outline-dark btn-sm ms-2" target="_blank" rel="noopener noreferrer"><i class="bi bi-file-earmark-pdf"></i> Fiche PDF</a>
     <a href="{{ route('admin.alertes-meteo.edit', $alerte) }}" class="btn btn-warning btn-sm ms-2"><i class="bi bi-pencil"></i> Modifier</a>
     <x-delete-button :action="route('admin.alertes-meteo.destroy', $alerte)" class="btn btn-sm btn-danger ms-2"
                      :confirm="'Supprimer l\'alerte '.$alerte->titre.' ?'" />

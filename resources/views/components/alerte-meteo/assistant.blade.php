@@ -68,29 +68,73 @@
                 bouton.addEventListener('click', () => basculer(panneau.classList.contains('d-none')));
                 racine.querySelector('.ha-assistant-fermer').addEventListener('click', () => basculer(false));
 
-                // Le texte est échappé, puis seul **gras** est transformé (pas d'injection HTML possible)
-                const formater = (texte) => {
-                    const div = document.createElement('div');
-                    div.textContent = texte;
-                    return div.innerHTML.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+                // Affiche le texte de la réponse : **gras** devient <strong>, tout le reste est du texte brut.
+                // Aucun innerHTML : le contenu reçu ne peut jamais être interprété comme du HTML (pas de XSS).
+                const ecrire = (element, texte) => {
+                    texte.split('**').forEach((morceau, i) => {
+                        if (!morceau) return;
+                        if (i % 2 === 1) {
+                            const gras = document.createElement('strong');
+                            gras.textContent = morceau;
+                            element.appendChild(gras);
+                        } else {
+                            element.appendChild(document.createTextNode(morceau));
+                        }
+                    });
                 };
 
-                const ajouter = (contenu, classe, html = false) => {
-                    const bulle = document.createElement('div');
-                    bulle.className = 'ha-msg ' + classe;
-                    if (html) bulle.innerHTML = contenu; else bulle.textContent = contenu;
-                    messages.appendChild(bulle);
+                // N'accepte que des liens vers notre propre site (pas de javascript:, pas de site externe)
+                const lienSur = (url) => {
+                    try {
+                        const cible = new URL(url, window.location.origin);
+                        return cible.origin === window.location.origin ? cible.href : null;
+                    } catch {
+                        return null;
+                    }
+                };
+
+                const bulle = (classe, texte = '') => {
+                    const div = document.createElement('div');
+                    div.className = 'ha-msg ' + classe;
+                    div.textContent = texte;
+                    messages.appendChild(div);
                     messages.scrollTop = messages.scrollHeight;
-                    return bulle;
+                    return div;
+                };
+
+                const afficherReponse = (element, donnees) => {
+                    element.textContent = '';
+                    ecrire(element, String(donnees.reponse ?? ''));
+
+                    const liens = (donnees.liens ?? []).map(l => [lienSur(l.url), l.texte]).filter(([url]) => url);
+                    if (liens.length) {
+                        const zone = document.createElement('div');
+                        zone.className = 'mt-2 d-flex flex-wrap gap-2';
+                        liens.forEach(([url, texte]) => {
+                            const a = document.createElement('a');
+                            a.href = url;
+                            a.className = 'small';
+                            a.textContent = '→ ' + texte;
+                            zone.appendChild(a);
+                        });
+                        element.appendChild(zone);
+                    }
+
+                    const source = document.createElement('div');
+                    source.className = 'ha-msg-source';
+                    source.textContent = donnees.source === 'ia'
+                        ? 'Rédigé par l’IA Gemini à partir des données HeatAlert'
+                        : 'Analyse automatique des alertes HeatAlert';
+                    element.appendChild(source);
                 };
 
                 const envoyer = async (question) => {
                     question = question.trim();
                     if (!question) return;
                     racine.querySelector('.ha-assistant-suggestions')?.remove();
-                    ajouter(question, 'ha-msg-user');
+                    bulle('ha-msg-user', question);
                     champ.value = '';
-                    const attente = ajouter('…', 'ha-msg-bot');
+                    const attente = bulle('ha-msg-bot', '…');
 
                     try {
                         const reponse = await fetch(url, {
@@ -100,17 +144,7 @@
                         });
                         const donnees = await reponse.json();
                         if (!reponse.ok) throw new Error(donnees.message || 'Erreur');
-
-                        let html = formater(donnees.reponse);
-                        if (donnees.liens?.length) {
-                            html += '<div class="mt-2 d-flex flex-wrap gap-2">' + donnees.liens.map(l => {
-                                const a = document.createElement('a');
-                                a.href = l.url; a.textContent = '→ ' + l.texte; a.className = 'small';
-                                return a.outerHTML;
-                            }).join('') + '</div>';
-                        }
-                        html += '<div class="ha-msg-source">' + (donnees.source === 'ia' ? 'Rédigé par l’IA Gemini à partir des données HeatAlert' : 'Analyse automatique des alertes HeatAlert') + '</div>';
-                        attente.innerHTML = html;
+                        afficherReponse(attente, donnees);
                     } catch (e) {
                         attente.textContent = 'Désolé, je n’ai pas pu répondre (' + e.message + '). Réessayez dans un instant.';
                     }

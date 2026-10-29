@@ -25,7 +25,11 @@ class StatistiquesAlerteMeteoController extends Controller
 
     public function index(Request $request): View
     {
-        $periode = array_key_exists($request->input('periode'), self::PERIODES) ? $request->input('periode') : '12';
+        // Période choisie : on n'accepte qu'une des clés prévues (sinon 12 mois par défaut)
+        $periode = $request->query('periode');
+        if (! is_string($periode) || ! array_key_exists($periode, self::PERIODES)) {
+            $periode = '12';
+        }
         $mois = self::PERIODES[$periode][1];
         $depuis = $mois ? now()->subMonths($mois)->startOfMonth() : null;
 

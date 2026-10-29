@@ -47,7 +47,15 @@
                 const t = parseFloat(temp.value);
                 if (select.value || isNaN(t)) { aide.textContent = ''; return; }
                 const n = niveaux.find(n => t >= n.min) ?? niveaux[niveaux.length - 1];
-                aide.innerHTML = n ? `<i class="bi bi-magic"></i> Niveau automatique : <strong>${n.nom}</strong>` : '';
+                // Construction sans innerHTML : le nom du niveau est affiché comme du texte
+                aide.textContent = '';
+                if (n) {
+                    const icone = document.createElement('i');
+                    icone.className = 'bi bi-magic';
+                    const nom = document.createElement('strong');
+                    nom.textContent = n.nom;
+                    aide.append(icone, ' Niveau automatique : ', nom);
+                }
             };
             temp.addEventListener('input', maj);
             select.addEventListener('change', maj);

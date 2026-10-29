@@ -5,8 +5,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Alerte {{ $alerte->niveauVigilance->nom }} – {{ $alerte->titre }} | {{ config('app.name') }}</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet"
+          integrity="sha384-XGjxtQfXaH2tnPFa9x+ruJTuLE3Aa6LhHSWRr1XeTyhezb4abCG4ccI5AkVDxqC+" crossorigin="anonymous">
     <style>
         body { background: #e9ecef; }
         .fiche { width: 210mm; min-height: 297mm; margin: 1.5rem auto; background: #fff; padding: 16mm 15mm; box-shadow: 0 .5rem 1.5rem rgba(0,0,0,.15); }
@@ -70,6 +72,16 @@
 
         <h2><i class="bi bi-bar-chart-steps"></i> Échelle de vigilance</h2>
         <table class="table table-sm table-bordered align-middle mb-0">
+            <caption class="visually-hidden">Échelle des niveaux de vigilance canicule</caption>
+            <thead class="table-light">
+                <tr>
+                    <th scope="col"><span class="visually-hidden">Couleur</span></th>
+                    <th scope="col">Niveau</th>
+                    <th scope="col">Températures</th>
+                    <th scope="col">Consigne</th>
+                </tr>
+            </thead>
+            <tbody>
             @foreach ($niveaux as $niveau)
                 <tr @if ($niveau->id === $alerte->niveau_vigilance_id) class="fw-bold" @endif>
                     <td style="width: 6px; background: {{ $niveau->couleur }}"></td>
@@ -78,6 +90,7 @@
                     <td class="small">{{ $niveau->consigne }}</td>
                 </tr>
             @endforeach
+            </tbody>
         </table>
 
         <div class="d-flex justify-content-between align-items-end mt-4 pt-3 border-top small text-muted">
@@ -89,7 +102,8 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.2/dist/html2pdf.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.2/dist/html2pdf.bundle.min.js"
+            integrity="sha384-aBc0BOllaGWrQx51DYt978St/L7B+21jzNGc4N/jnGD0NxGwj8S/ftRgW0AkXIak" crossorigin="anonymous"></script>
     <script>
         document.getElementById('telecharger-pdf').addEventListener('click', () => {
             html2pdf().set({
