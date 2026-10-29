@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\AlerteMeteo;
 use App\Models\NiveauVigilance;
 use App\Models\Zone;
+use App\Services\AlerteMeteo\PrevisionChaleurService;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
@@ -64,5 +65,56 @@ class AlerteMeteoController extends Controller
             ->get();
 
         return view('front.alertes-meteo.show', compact('alerte', 'autresAlertes'));
+    }
+
+    /**
+     * Prévisions des 7 prochains jours pour une zone, avec graphique Chart.js
+     * (température maximale, température ressentie et seuils des niveaux de vigilance).
+     */
+    public function previsions(Request $request, PrevisionChaleurService $meteo): View
+    {
+        $zones = Zone::orderBy('nom')->get(['id', 'nom', 'gouvernorat', 'latitude', 'longitude']);
+        $zone = $zones->firstWhere('id', (int) $request->input('zone_id')) ?? $zones->first();
+        $niveaux = NiveauVigilance::orderBy('ordre')->get();
+
+        $previsions = collect();
+        $erreur = null;
+
+        if ($zone) {
+            try {
+                $previsions = $meteo->previsions($zone);
+            } catch (\Throwable) {
+                $erreur = 'Les prévisions météo sont indisponibles pour le moment. Réessayez dans quelques minutes.';
+            }
+        }
+
+        // Alertes déjà publiées sur la zone pour la même période
+        $alertes = $zone
+            ? AlerteMeteo::with('niveauVigilance')->where('zone_id', $zone->id)->actives()->orderBy('date_debut')->get()
+            : collect();
+
+        return view('front.alertes-meteo.previsions', [
+            'zones' => $zones,
+            'zone' => $zone,
+            'niveaux' => $niveaux,
+            'previsions' => $previsions,
+            'pic' => $previsions->sortByDesc('temperature')->first(),
+            'alertes' => $alertes,
+            'erreur' => $erreur,
+        ]);
+    }
+
+    /**
+     * Fiche imprimable d'une alerte (format A4), téléchargeable en PDF.
+     * Le PDF est généré dans le navigateur (html2pdf.js) : aucune dépendance Composer à installer.
+     */
+    public function fiche(AlerteMeteo $alerte): View
+    {
+        $alerte->load(['niveauVigilance', 'zone']);
+
+        return view('front.alertes-meteo.fiche', [
+            'alerte' => $alerte,
+            'niveaux' => NiveauVigilance::orderBy('ordre')->get(),
+        ]);
     }
 }

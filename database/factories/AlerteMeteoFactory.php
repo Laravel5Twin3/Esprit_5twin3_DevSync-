@@ -75,6 +75,21 @@ class AlerteMeteoFactory extends Factory
         ]);
     }
 
+    /**
+     * Alerte passée d'un été précédent (juin à septembre des 12 derniers mois) :
+     * sert à alimenter l'historique et les statistiques par zone.
+     */
+    public function historique(): static
+    {
+        return $this->state(function () {
+            $mois = fake()->randomElement([6, 7, 7, 8, 8, 9]);
+            $annee = now()->month > $mois ? now()->year : now()->year - 1;
+            $debut = now()->setDate($annee, $mois, fake()->numberBetween(1, 25))->setTime(fake()->numberBetween(8, 12), 0);
+
+            return ['date_debut' => $debut, 'date_fin' => (clone $debut)->addDays(fake()->numberBetween(1, 4))];
+        });
+    }
+
     /** Alerte terminée. */
     public function terminee(): static
     {
