@@ -3,7 +3,12 @@
 @section('title', $alerte->titre)
 
 @section('content')
-    <a href="{{ route('alertes-meteo.index') }}" class="btn btn-link px-0 mb-3"><i class="bi bi-arrow-left"></i> Toutes les alertes</a>
+    <div class="d-flex flex-wrap justify-content-between align-items-center mb-3 gap-2">
+        <a href="{{ route('alertes-meteo.index') }}" class="btn btn-link px-0"><i class="bi bi-arrow-left"></i> Toutes les alertes</a>
+        <a href="{{ route('alertes-meteo.fiche', $alerte) }}" class="btn btn-outline-dark btn-sm">
+            <i class="bi bi-file-earmark-pdf"></i> Fiche PDF / imprimer
+        </a>
+    </div>
 
     <div class="row g-4">
         <div class="col-lg-8">

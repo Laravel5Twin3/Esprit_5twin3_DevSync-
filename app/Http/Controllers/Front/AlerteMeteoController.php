@@ -103,4 +103,18 @@ class AlerteMeteoController extends Controller
             'erreur' => $erreur,
         ]);
     }
+
+    /**
+     * Fiche imprimable d'une alerte (format A4), téléchargeable en PDF.
+     * Le PDF est généré dans le navigateur (html2pdf.js) : aucune dépendance Composer à installer.
+     */
+    public function fiche(AlerteMeteo $alerte): View
+    {
+        $alerte->load(['niveauVigilance', 'zone']);
+
+        return view('front.alertes-meteo.fiche', [
+            'alerte' => $alerte,
+            'niveaux' => NiveauVigilance::orderBy('ordre')->get(),
+        ]);
+    }
 }

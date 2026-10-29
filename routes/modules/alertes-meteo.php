@@ -15,6 +15,7 @@ Route::get('/alertes-meteo/previsions', [FrontAlerteMeteoController::class, 'pre
 Route::post('/alertes-meteo/assistant', [AssistantCaniculeController::class, 'repondre'])
     ->middleware('throttle:20,1')->name('alertes-meteo.assistant');
 Route::get('/alertes-meteo/{alerte}', [FrontAlerteMeteoController::class, 'show'])->whereNumber('alerte')->name('alertes-meteo.show');
+Route::get('/alertes-meteo/{alerte}/fiche', [FrontAlerteMeteoController::class, 'fiche'])->whereNumber('alerte')->name('alertes-meteo.fiche');
 
 // ─── Back Office (admin) ───────────────────────────────────────────────────
 Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
