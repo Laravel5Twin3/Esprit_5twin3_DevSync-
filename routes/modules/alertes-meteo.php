@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Back\AlerteMeteoController as BackAlerteMeteoController;
 use App\Http\Controllers\Back\NiveauVigilanceController;
+use App\Http\Controllers\Back\StatistiquesAlerteMeteoController;
 use App\Http\Controllers\Front\AlerteMeteoController as FrontAlerteMeteoController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,6 +16,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(fun
     // CRUD des niveaux de vigilance : admin.niveaux-vigilance.*
     Route::resource('niveaux-vigilance', NiveauVigilanceController::class)
         ->parameters(['niveaux-vigilance' => 'niveau']);
+
+    // Statistiques avancées par zone (avant le resource !)
+    Route::get('alertes-meteo/statistiques', [StatistiquesAlerteMeteoController::class, 'index'])->name('alertes-meteo.statistiques');
 
     // Génération d'une alerte depuis les prévisions Open-Meteo (avant le resource !)
     Route::get('alertes-meteo/generer', [BackAlerteMeteoController::class, 'generer'])->name('alertes-meteo.generer');
