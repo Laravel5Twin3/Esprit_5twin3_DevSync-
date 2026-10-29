@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Route;
 
 // ─── Front Office ──────────────────────────────────────────────────────────
 Route::get('/alertes-meteo', [FrontAlerteMeteoController::class, 'index'])->name('alertes-meteo.index');
+Route::get('/alertes-meteo/previsions', [FrontAlerteMeteoController::class, 'previsions'])->name('alertes-meteo.previsions');
 Route::get('/alertes-meteo/{alerte}', [FrontAlerteMeteoController::class, 'show'])->whereNumber('alerte')->name('alertes-meteo.show');
 
 // ─── Back Office (admin) ───────────────────────────────────────────────────

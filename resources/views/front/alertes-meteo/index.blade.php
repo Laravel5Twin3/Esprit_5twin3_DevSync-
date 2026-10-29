@@ -6,7 +6,10 @@
     <section class="ha-hero text-white">
         <div class="container py-4">
             <h1 class="fw-bold"><i class="bi bi-thermometer-sun"></i> Alertes météo & canicule</h1>
-            <p class="lead mb-0">Vigilances chaleur en cours et à venir dans votre quartier, avec les bons réflexes à adopter.</p>
+            <p class="lead">Vigilances chaleur en cours et à venir dans votre quartier, avec les bons réflexes à adopter.</p>
+            <a href="{{ route('alertes-meteo.previsions', request()->only('zone_id')) }}" class="btn btn-light">
+                <i class="bi bi-graph-up-arrow"></i> Prévisions des 7 prochains jours
+            </a>
         </div>
     </section>
 @endsection

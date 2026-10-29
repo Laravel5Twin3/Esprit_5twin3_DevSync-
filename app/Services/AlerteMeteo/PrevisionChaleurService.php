@@ -6,6 +6,7 @@ use App\Models\NiveauVigilance;
 use App\Models\Zone;
 use Carbon\Carbon;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
 /**
@@ -20,31 +21,38 @@ class PrevisionChaleurService
     private const TUNIS = [36.8065, 10.1815];
 
     /**
-     * Prévisions journalières : collection de ['date' => Carbon, 'temperature' => float, 'niveau' => NiveauVigilance].
+     * Prévisions journalières : collection de
+     * ['date' => Carbon, 'temperature' => float, 'ressentie' => ?float, 'niveau' => NiveauVigilance].
+     * La réponse de l'API est mise en cache 30 minutes par zone (moins d'appels réseau).
      *
      * @throws \RuntimeException si l'API est injoignable
      */
     public function previsions(Zone $zone, int $jours = 7): Collection
     {
-        $reponse = Http::timeout(8)->retry(2, 300)->get(self::URL, [
-            'latitude' => $zone->latitude ?? self::TUNIS[0],
-            'longitude' => $zone->longitude ?? self::TUNIS[1],
-            'daily' => 'temperature_2m_max',
-            'timezone' => 'Africa/Tunis',
-            'forecast_days' => $jours,
-        ]);
-
-        if ($reponse->failed() || ! $reponse->json('daily.time')) {
-            throw new \RuntimeException('Le service météo Open-Meteo est indisponible pour le moment.');
-        }
-
-        return collect($reponse->json('daily.time'))
-            ->zip($reponse->json('daily.temperature_2m_max'))
-            ->map(fn ($jour) => [
-                'date' => Carbon::parse($jour[0]),
-                'temperature' => (float) $jour[1],
-                'niveau' => NiveauVigilance::pourTemperature((float) $jour[1]),
+        $daily = Cache::remember("open-meteo:zone:{$zone->id}:{$jours}", now()->addMinutes(30), function () use ($zone, $jours) {
+            $reponse = Http::timeout(8)->retry(2, 300)->get(self::URL, [
+                'latitude' => $zone->latitude ?? self::TUNIS[0],
+                'longitude' => $zone->longitude ?? self::TUNIS[1],
+                'daily' => 'temperature_2m_max,apparent_temperature_max',
+                'timezone' => 'Africa/Tunis',
+                'forecast_days' => $jours,
             ]);
+
+            if ($reponse->failed() || ! $reponse->json('daily.time')) {
+                throw new \RuntimeException('Le service météo Open-Meteo est indisponible pour le moment.');
+            }
+
+            return $reponse->json('daily');
+        });
+
+        $ressenties = $daily['apparent_temperature_max'] ?? [];
+
+        return collect($daily['time'])->values()->map(fn ($date, $i) => [
+            'date' => Carbon::parse($date),
+            'temperature' => (float) $daily['temperature_2m_max'][$i],
+            'ressentie' => isset($ressenties[$i]) ? (float) $ressenties[$i] : null,
+            'niveau' => NiveauVigilance::pourTemperature((float) $daily['temperature_2m_max'][$i]),
+        ]);
     }
 
     /**
