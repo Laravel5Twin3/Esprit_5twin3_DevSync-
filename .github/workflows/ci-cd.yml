@@ -31,7 +31,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Installation de PHP ${{ env.PHP_VERSION }}
-        uses: shivammathur/setup-php@v2
+        uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
         with:
           php-version: ${{ env.PHP_VERSION }}
           extensions: ${{ env.PHP_EXTENSIONS }}
@@ -63,7 +63,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: shivammathur/setup-php@v2
+      - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
         with:
           php-version: ${{ env.PHP_VERSION }}
           extensions: ${{ env.PHP_EXTENSIONS }}
@@ -108,7 +108,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: shivammathur/setup-php@v2
+      - uses: shivammathur/setup-php@eb7c497e18156a6bbabfef1d3a82760b9eda3962 # 2.40.0
         with:
           php-version: ${{ env.PHP_VERSION }}
           extensions: ${{ env.PHP_EXTENSIONS }}
@@ -146,10 +146,10 @@ jobs:
       - name: Nom de l'image (en minuscules, exigé par le registre)
         run: echo "IMAGE=ghcr.io/${GITHUB_REPOSITORY_OWNER,,}/heatalert" >> "$GITHUB_ENV"
 
-      - uses: docker/setup-buildx-action@v3
+      - uses: docker/setup-buildx-action@8d2750c68a42422c14e847fe6c8ac0403b4cbd6f # v3.12.0
 
       - name: Construction de l'image
-        uses: docker/build-push-action@v6
+        uses: docker/build-push-action@10e90e3645eae34f1e60eeb005ba3a3d33f178e8 # v6.19.2
         with:
           context: .
           load: true
@@ -159,7 +159,7 @@ jobs:
 
       - name: Test de l'image (le conteneur doit démarrer et répondre)
         run: |
-          docker run -d --name heatalert-test -p 8080:80 \
+          docker run -d --name heatalert-test -p 8080:8080 \
             -e APP_KEY="base64:$(openssl rand -base64 32)" "$IMAGE:latest"
           for _ in $(seq 1 30); do
             if curl -fsS http://localhost:8080/up > /dev/null; then
@@ -170,7 +170,7 @@ jobs:
           echo "Le conteneur ne répond pas"; docker logs heatalert-test; exit 1
 
       - name: Connexion au registre GitHub (ghcr.io)
-        uses: docker/login-action@v3
+        uses: docker/login-action@c94ce9fb468520275223c153574b00df6fe4bcc9 # v3.7.0
         with:
           registry: ghcr.io
           username: ${{ github.actor }}

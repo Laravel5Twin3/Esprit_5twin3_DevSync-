@@ -1,12 +1,7 @@
 #!/bin/sh
-# Démarrage du conteneur : prépare Laravel puis lance Apache.
+# Démarrage du conteneur (utilisateur www-data) : prépare Laravel puis lance Apache.
 set -e
 cd /var/www/html
-
-# L'hébergeur (Render…) impose le port d'écoute via la variable PORT
-PORT="${PORT:-80}"
-sed -i "s/^Listen .*/Listen ${PORT}/" /etc/apache2/ports.conf
-sed -i "s/<VirtualHost \*:[0-9]*>/<VirtualHost *:${PORT}>/" /etc/apache2/sites-available/000-default.conf
 
 if [ -z "$APP_KEY" ]; then
     echo "ERREUR : la variable d'environnement APP_KEY est obligatoire (php artisan key:generate --show)." >&2
@@ -28,7 +23,5 @@ php artisan view:cache
 php artisan migrate --force
 php artisan app:seed-si-vide
 
-# Les commandes ci-dessus tournent en root : Apache (www-data) doit pouvoir écrire
-chown -R www-data:www-data storage bootstrap/cache database
-
+# Apache écoute sur le port de la variable PORT (8080 par défaut)
 exec apache2-foreground

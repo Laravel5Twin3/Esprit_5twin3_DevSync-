@@ -163,7 +163,7 @@ Lancer l'image de production en local :
 
 ```bash
 docker build -t heatalert .
-docker run -p 8080:80 -e APP_KEY="$(php artisan key:generate --show)" heatalert
+docker run -p 8080:8080 -e APP_KEY="$(php artisan key:generate --show)" heatalert
 # → http://localhost:8080
 ```
 
