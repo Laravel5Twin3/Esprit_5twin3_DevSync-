@@ -137,3 +137,40 @@ git merge main
 
 Après chaque `git pull` : `npm run update`
 (de nouvelles migrations ou dépendances ont pu être ajoutées par les autres).
+
+---
+
+## DevOps : pipeline CI/CD
+
+Le pipeline [`.github/workflows/ci-cd.yml`](.github/workflows/ci-cd.yml) (GitHub Actions) se lance tout seul :
+
+| Événement | Étapes exécutées |
+|---|---|
+| Pull Request vers `main` | **CI** : 1. Qualité & sécurité → 2. Tests + 3. Migrations MySQL |
+| Push / merge sur `main` | **CI** puis **CD** : 4. Image Docker → 5. Déploiement sur Render |
+
+1. **Qualité & sécurité** : `composer validate`, syntaxe PHP, `composer audit` (failles connues).
+2. **Tests** : `php artisan test` (PHPUnit, SQLite en mémoire) : pages de tous les modules, CRUD, validation, IA.
+3. **Base MySQL** : `migrate:fresh --seed` sur un vrai MySQL 8 (vérifie migrations et seeders).
+4. **Image Docker** : construite (`Dockerfile`), démarrée et testée, puis publiée sur `ghcr.io`.
+5. **Déploiement** : Render récupère la nouvelle image ; le pipeline vérifie que le site répond sur `/up`.
+
+➡️ Une Pull Request avec une croix rouge ❌ ne doit pas être fusionnée : ouvrir l'onglet **Actions** pour voir l'étape en échec.
+
+Lancer les tests en local : `php artisan test` (n'utilise pas votre base MySQL).
+
+Lancer l'image de production en local :
+
+```bash
+docker build -t heatalert .
+docker run -p 8080:8080 -e APP_KEY="$(php artisan key:generate --show)" heatalert
+# → http://localhost:8080
+```
+
+### Configuration (une seule fois)
+
+| Où | Quoi |
+|---|---|
+| GitHub → Settings → Secrets and variables → Actions → **Secrets** | `RENDER_DEPLOY_HOOK_URL` : le *Deploy Hook* du service Render |
+| GitHub → Settings → Secrets and variables → Actions → **Variables** | `APP_URL` : l'adresse du site (ex. `https://heatalert.onrender.com`) |
+| Render → service → Environment | `APP_KEY` (généré par `php artisan key:generate --show`), `APP_URL` |
