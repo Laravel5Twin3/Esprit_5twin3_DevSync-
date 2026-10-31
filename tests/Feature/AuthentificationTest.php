@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\URL;
 use PragmaRX\Google2FA\Google2FA;
 use Tests\TestCase;
 
@@ -127,9 +126,8 @@ class AuthentificationTest extends TestCase
 
         $this->actingAs($user)->get('/mes-signalements')->assertRedirect(route('verification.notice'));
 
-        $lien = URL::temporarySignedRoute('verification.verify', now()->addHour(), [
-            'id' => $user->id, 'hash' => sha1($user->email),
-        ]);
+        // Lien réellement contenu dans l'e-mail envoyé par Laravel
+        $lien = (new VerifyEmail)->toMail($user)->actionUrl;
         $this->actingAs($user)->get($lien)->assertRedirect();
 
         $this->assertNotNull($user->fresh()->email_verified_at);

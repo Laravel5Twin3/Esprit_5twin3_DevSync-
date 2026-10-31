@@ -52,20 +52,33 @@
                         </div>
                     </div>
 
-                    @foreach ([['name', 'Nom complet', 'text', 'name'], ['email', 'Email', 'email', 'username'], ['phone', 'Téléphone', 'text', 'tel']] as [$champ, $label, $type, $autocomplete])
-                        <div class="mb-3">
-                            <label for="{{ $champ }}" class="form-label">{{ $label }}</label>
-                            <input type="{{ $type }}" id="{{ $champ }}" name="{{ $champ }}" autocomplete="{{ $autocomplete }}"
-                                   value="{{ old($champ, $user->$champ) }}"
-                                   class="form-control @if ($erreursProfil->has($champ)) is-invalid @endif">
-                            @if ($erreursProfil->has($champ))
-                                <div class="invalid-feedback">{{ $erreursProfil->first($champ) }}</div>
-                            @endif
-                            @if ($champ === 'email')
-                                <div class="form-text">Si vous changez d'adresse, vous devrez la confirmer par e-mail.</div>
-                            @endif
-                        </div>
-                    @endforeach
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Nom complet</label>
+                        <input type="text" id="name" name="name" autocomplete="name" value="{{ old('name', $user->name) }}"
+                               class="form-control @if ($erreursProfil->has('name')) is-invalid @endif">
+                        @if ($erreursProfil->has('name'))
+                            <div class="invalid-feedback">{{ $erreursProfil->first('name') }}</div>
+                        @endif
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email</label>
+                        <input type="email" id="email" name="email" autocomplete="email" value="{{ old('email', $user->email) }}"
+                               class="form-control @if ($erreursProfil->has('email')) is-invalid @endif">
+                        @if ($erreursProfil->has('email'))
+                            <div class="invalid-feedback">{{ $erreursProfil->first('email') }}</div>
+                        @endif
+                        <div class="form-text">Si vous changez d'adresse, vous devrez la confirmer par e-mail.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="phone" class="form-label">Téléphone</label>
+                        <input type="tel" id="phone" name="phone" autocomplete="tel" value="{{ old('phone', $user->phone) }}"
+                               class="form-control @if ($erreursProfil->has('phone')) is-invalid @endif">
+                        @if ($erreursProfil->has('phone'))
+                            <div class="invalid-feedback">{{ $erreursProfil->first('phone') }}</div>
+                        @endif
+                    </div>
 
                     <button type="submit" class="btn btn-ha"><i class="bi bi-check-lg"></i> Enregistrer</button>
                 </form>
@@ -76,19 +89,33 @@
                 <form method="POST" action="{{ route('user-password.update') }}" novalidate>
                     @csrf
                     @method('PUT')
-                    @foreach ([['current_password', 'Mot de passe actuel', 'current-password'], ['password', 'Nouveau mot de passe', 'new-password'], ['password_confirmation', 'Confirmation', 'new-password']] as [$champ, $label, $autocomplete])
-                        <div class="mb-3">
-                            <label for="{{ $champ }}" class="form-label">{{ $label }}</label>
-                            <input type="password" id="{{ $champ }}" name="{{ $champ }}" autocomplete="{{ $autocomplete }}"
-                                   class="form-control @if ($erreursMdp->has($champ)) is-invalid @endif">
-                            @if ($erreursMdp->has($champ))
-                                <div class="invalid-feedback">{{ $erreursMdp->first($champ) }}</div>
-                            @endif
-                            @if ($champ === 'password')
-                                <div class="form-text">8 caractères minimum, avec des lettres et des chiffres.</div>
-                            @endif
-                        </div>
-                    @endforeach
+                    <div class="mb-3">
+                        <label for="current_password" class="form-label">Mot de passe actuel</label>
+                        <input type="password" id="current_password" name="current_password" autocomplete="current-password"
+                               class="form-control @if ($erreursMdp->has('current_password')) is-invalid @endif">
+                        @if ($erreursMdp->has('current_password'))
+                            <div class="invalid-feedback">{{ $erreursMdp->first('current_password') }}</div>
+                        @endif
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Nouveau mot de passe</label>
+                        <input type="password" id="password" name="password" autocomplete="new-password"
+                               class="form-control @if ($erreursMdp->has('password')) is-invalid @endif">
+                        @if ($erreursMdp->has('password'))
+                            <div class="invalid-feedback">{{ $erreursMdp->first('password') }}</div>
+                        @endif
+                        <div class="form-text">8 caractères minimum, avec des lettres et des chiffres.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="password_confirmation" class="form-label">Confirmation</label>
+                        <input type="password" id="password_confirmation" name="password_confirmation" autocomplete="new-password"
+                               class="form-control @if ($erreursMdp->has('password_confirmation')) is-invalid @endif">
+                        @if ($erreursMdp->has('password_confirmation'))
+                            <div class="invalid-feedback">{{ $erreursMdp->first('password_confirmation') }}</div>
+                        @endif
+                    </div>
                     <button type="submit" class="btn btn-ha"><i class="bi bi-key"></i> Changer le mot de passe</button>
                 </form>
             </x-card>
