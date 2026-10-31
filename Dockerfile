@@ -35,19 +35,26 @@ RUN sed -ri 's/^Listen 80$/Listen ${PORT}/' /etc/apache2/ports.conf \
 # Valeurs par défaut de production (surchargeables par les variables d'environnement de l'hébergeur)
 ENV APP_ENV=production \
     APP_DEBUG=false \
+    APP_LOCALE=fr \
+    APP_FAKER_LOCALE=fr_FR \
     LOG_CHANNEL=stderr \
     DB_CONNECTION=sqlite \
     DB_DATABASE=/var/www/html/database/database.sqlite \
     SESSION_DRIVER=file \
     CACHE_STORE=file \
-    QUEUE_CONNECTION=sync
+    QUEUE_CONNECTION=sync \
+    MAIL_MAILER=log \
+    MAIL_FROM_ADDRESS=no-reply@heatalert.tn
 
 WORKDIR /var/www/html
 COPY --from=vendor /app /var/www/html
 COPY docker/entrypoint.sh /usr/local/bin/entrypoint.sh
 
-# Seuls les dossiers où l'application écrit appartiennent à www-data ; le code reste en lecture seule
+# Seuls les dossiers où l'application écrit appartiennent à www-data ; le code reste en lecture seule.
+# public/storage → storage/app/public : rend les photos de profil accessibles.
 RUN chmod +x /usr/local/bin/entrypoint.sh \
+    && ln -sfn /var/www/html/storage/app/public /var/www/html/public/storage \
+    && mkdir -p storage/app/public \
     && chown -R www-data:www-data storage bootstrap/cache database \
        /var/run/apache2 /var/lock/apache2 /var/log/apache2
 

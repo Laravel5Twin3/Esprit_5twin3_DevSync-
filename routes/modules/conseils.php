@@ -13,7 +13,7 @@ Route::get('/conseils/{conseil}', [FrontConseilController::class, 'show'])
     ->name('conseils.show');
 
 // ─── Back Office (admin) ───────────────────────────────────────────────────
-Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified', 'admin'])->group(function () {
 
     Route::resource('conseils', BackConseilController::class);
 

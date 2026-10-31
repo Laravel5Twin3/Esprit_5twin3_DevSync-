@@ -6,14 +6,19 @@
     <div class="row justify-content-center">
         <div class="col-md-6 col-lg-5">
             <x-card title="Connexion">
+                <x-auth.statut />
+
                 <form method="POST" action="{{ route('login') }}" novalidate>
                     @csrf
-                    <x-form.input name="email" type="email" label="Email" required autofocus />
-                    <x-form.input name="password" type="password" label="Mot de passe" required />
+                    <x-form.input name="email" type="email" label="Email" required autofocus autocomplete="username" />
+                    <x-form.input name="password" type="password" label="Mot de passe" required autocomplete="current-password" />
 
-                    <div class="form-check mb-3">
-                        <input class="form-check-input" type="checkbox" name="remember" id="remember">
-                        <label class="form-check-label" for="remember">Se souvenir de moi</label>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="remember" id="remember">
+                            <label class="form-check-label" for="remember">Se souvenir de moi</label>
+                        </div>
+                        <a href="{{ route('password.request') }}" class="small">Mot de passe oublié ?</a>
                     </div>
 
                     <button type="submit" class="btn btn-ha w-100">Se connecter</button>

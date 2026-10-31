@@ -2,7 +2,7 @@
     "private": true,
     "type": "module",
     "scripts": {
-        "setup": "composer install && php -r \"file_exists('.env') || copy('.env.example', '.env');\" && php artisan key:generate && php artisan migrate:fresh --seed",
+        "setup": "composer install && php -r \"file_exists('.env') || copy('.env.example', '.env');\" && php artisan key:generate && php artisan storage:link && php artisan migrate:fresh --seed",
         "dev": "php artisan serve",
         "start": "php artisan serve",
         "db:fresh": "php artisan migrate:fresh --seed",

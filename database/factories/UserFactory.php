@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -28,10 +29,21 @@ class UserFactory extends Factory
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
-            'role' => 'citoyen',
             'phone' => fake()->phoneNumber(),
             'remember_token' => Str::random(10),
         ];
+    }
+
+    /**
+     * Par défaut, un utilisateur créé est un citoyen (rôle Spatie).
+     */
+    public function configure(): static
+    {
+        return $this->afterCreating(function (User $user) {
+            if (! $user->roles()->exists()) {
+                $user->assignRole('citoyen');
+            }
+        });
     }
 
     /**
@@ -39,9 +51,7 @@ class UserFactory extends Factory
      */
     public function admin(): static
     {
-        return $this->state(fn (array $attributes) => [
-            'role' => 'admin',
-        ]);
+        return $this->afterCreating(fn (User $user) => $user->syncRoles('admin'));
     }
 
     /**

@@ -4,7 +4,7 @@
     </button>
 
     <div class="ms-auto d-flex align-items-center gap-3">
-        <span class="text-muted"><i class="bi bi-person-circle"></i> {{ auth()->user()->name }}</span>
+        <a href="{{ route('profil.show') }}" class="text-muted text-decoration-none d-flex align-items-center gap-2"><x-avatar :user="auth()->user()" size="28" /> {{ auth()->user()->name }}</a>
         <form method="POST" action="{{ route('logout') }}">
             @csrf
             <button class="btn btn-outline-danger btn-sm" type="submit"><i class="bi bi-box-arrow-right"></i> Déconnexion</button>

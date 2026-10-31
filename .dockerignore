@@ -17,3 +17,4 @@ storage/app/private/*
 bootstrap/cache/*.php
 Dockerfile
 docker-compose*.yml
+public/storage

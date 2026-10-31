@@ -18,7 +18,7 @@ Route::get('/alertes-meteo/{alerte}', [FrontAlerteMeteoController::class, 'show'
 Route::get('/alertes-meteo/{alerte}/fiche', [FrontAlerteMeteoController::class, 'fiche'])->whereNumber('alerte')->name('alertes-meteo.fiche');
 
 // ─── Back Office (admin) ───────────────────────────────────────────────────
-Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified', 'admin'])->group(function () {
     // CRUD des niveaux de vigilance : admin.niveaux-vigilance.*
     Route::resource('niveaux-vigilance', NiveauVigilanceController::class)
         ->parameters(['niveaux-vigilance' => 'niveau']);
