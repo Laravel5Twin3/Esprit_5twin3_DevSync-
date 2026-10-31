@@ -49,7 +49,7 @@ class MeteoService
         }
 
         $coordonnees = $this->coordonnees($zones);
-        $cle = 'meteo-normales:'.md5(json_encode($coordonnees)).':'.$date->format('m-d');
+        $cle = 'meteo-normales:'.hash('sha256', json_encode($coordonnees)).':'.$date->format('m-d');
 
         try {
             $normales = Cache::remember($cle, now()->addDays(7), fn () => $this->normalesSaisonnieres($coordonnees, $date));
@@ -77,7 +77,7 @@ class MeteoService
 
         $coordonnees = $this->coordonnees($zones);
 
-        $cle = 'meteo-coupures:'.md5(json_encode($coordonnees)).":{$joursPasses}:{$joursFuturs}:".today()->toDateString();
+        $cle = 'meteo-coupures:'.hash('sha256', json_encode($coordonnees)).":{$joursPasses}:{$joursFuturs}:".today()->toDateString();
 
         try {
             $series = Cache::remember($cle, now()->addHours(3), fn () => $this->appelerApi($coordonnees, $joursPasses, $joursFuturs));

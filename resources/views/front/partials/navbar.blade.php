@@ -72,13 +72,25 @@
                             data-bs-toggle="dropdown"
                             aria-expanded="false"
                         >
-                            <i class="bi bi-person-circle"></i>
+                            <x-avatar :user="auth()->user()" size="26" class="me-1" />
                             {{ auth()->user()->name }}
                         </a>
 
                         <ul class="dropdown-menu dropdown-menu-end">
 
                             {{-- Les liens propres à un module vont dans son menu (resources/views/front/menu/), pas ici --}}
+
+                            {{-- Profil --}}
+                            <li>
+                                <a class="dropdown-item" href="{{ route('profil.show') }}">
+                                    <i class="bi bi-person-gear"></i>
+                                    Mon profil
+                                </a>
+                            </li>
+
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
 
                             {{-- Déconnexion --}}
                             <li>

@@ -17,7 +17,7 @@ Route::get('/api/points-fraicheur/recommander', [FrontPointFraicheurController::
     ->name('points-fraicheur.recommander');
 
 // ─── Back Office (admin) ───────────────────────────────────────────────────
-Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified', 'admin'])->group(function () {
 
     // CRUD complet des points de fraîcheur
     Route::resource('points-fraicheur', BackPointFraicheurController::class);

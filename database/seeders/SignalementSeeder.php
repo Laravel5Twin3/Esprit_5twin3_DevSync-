@@ -15,7 +15,7 @@ class SignalementSeeder extends Seeder
      */
     public function run(): void
     {
-        $habitants = User::where('role', 'citoyen')->get();
+        $habitants = User::role('citoyen')->get();
 
         // Coupures en cours : plusieurs habitants les ont signalées, l'admin a validé
         Coupure::where('statut', 'en_cours')->get()->each(function (Coupure $coupure) use ($habitants) {

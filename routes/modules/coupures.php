@@ -14,14 +14,14 @@ Route::get('/coupures/previsions', [FrontCoupureController::class, 'previsions']
 Route::get('/coupures/{coupure}', [FrontCoupureController::class, 'show'])->whereNumber('coupure')->name('coupures.show');
 
 // Signalements des habitants (connexion obligatoire)
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'verified', 'permission:signaler coupure'])->group(function () {
     Route::get('/coupures/signaler', [FrontSignalementController::class, 'create'])->name('signalements.create');
     Route::post('/coupures/signaler', [FrontSignalementController::class, 'store'])->name('signalements.store');
     Route::get('/mes-signalements', [FrontSignalementController::class, 'index'])->name('signalements.index');
 });
 
 // ─── Back Office (admin) ───────────────────────────────────────────────────
-Route::prefix('admin')->name('admin.')->middleware(['auth', 'admin'])->group(function () {
+Route::prefix('admin')->name('admin.')->middleware(['auth', 'verified', 'admin', 'permission:gerer coupures'])->group(function () {
     // Prédiction des coupures
     Route::get('coupures-ia', [PredictionCoupureController::class, 'index'])->name('coupures-ia.index');
     Route::post('coupures-ia/entrainer', [PredictionCoupureController::class, 'entrainer'])->name('coupures-ia.entrainer');

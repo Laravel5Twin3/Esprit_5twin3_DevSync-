@@ -68,9 +68,11 @@ Ouvrir http://127.0.0.1:8000
 | Layout Back Office               | `resources/views/layouts/back.blade.php`                                                                                                                      |
 | Partials                         | `resources/views/front/partials/`, `resources/views/back/partials/`                                                                                           |
 | Composants Blade                 | `resources/views/components/` → `<x-card>`, `<x-flash>`, `<x-delete-button>`, `<x-form.input>`, `<x-form.select>`, `<x-form.textarea>`, `<x-back.stat-card>` |
-| Auth (login / register / logout) | `app/Http/Controllers/Auth/AuthController.php`                                                                                                                |
-| Rôles                           | colonne`users.role` (`admin` / `citoyen`), middleware `admin`                                                                                                 |
-| Routes admin                     | préfixe`/admin`, noms `admin.*`, middleware `['auth', 'admin']`                                                                                              |
+| Authentification                 | **Laravel Fortify** (`config/fortify.php`, `app/Actions/Fortify/`, vues `resources/views/auth/`) : connexion, inscription, mot de passe oublié, vérification d'e-mail, 2FA |
+| Profil                           | `/profil` (`ProfilController`, `resources/views/profil/show.blade.php`) : infos, photo, mot de passe, 2FA, suppression du compte |
+| Rôles et permissions             | **Spatie Permission** : rôles `admin` / `citoyen`, `$user->isAdmin()`, `@can('gerer coupures')`, middleware `permission:...` ; gestion dans `/admin/utilisateurs` |
+| Routes connectées                | middleware `['auth', 'verified']` (e-mail vérifié obligatoire)                                                                 |
+| Routes admin                     | préfixe `/admin`, noms `admin.*`, middleware `['auth', 'verified', 'admin']`                                                    |
 
 ### Sections disponibles dans les layouts
 
@@ -140,6 +142,38 @@ Après chaque `git pull` : `npm run update`
 
 ---
 
+## Gestion des utilisateurs (tâche commune)
+
+| Fonctionnalité | Où / comment |
+|---|---|
+| Inscription, connexion, déconnexion | `/register`, `/login` (Fortify) ; 5 tentatives de connexion par minute |
+| Mot de passe oublié | `/forgot-password` → lien par e-mail, valable 60 min |
+| Vérification d'e-mail | obligatoire avant toute page connectée (`verified`) ; lien renvoyable depuis `/email/verify` |
+| Rôles et permissions | Spatie : `admin` (toutes les permissions), `citoyen` (`signaler coupure`, `publier entraide`) |
+| Double authentification | `/profil` → QR code (Google / Microsoft Authenticator) + codes de récupération |
+| Profil | `/profil` : nom, e-mail, téléphone, photo, mot de passe, suppression du compte |
+
+Protéger une route par permission : `->middleware('permission:gerer coupures')` ; dans une vue : `@can('gerer coupures') … @endcan`.
+
+### Recevoir les e-mails (Mailtrap)
+
+1. Créer un compte gratuit sur [mailtrap.io](https://mailtrap.io) → **Email Testing** → **Inboxes** → **SMTP** : copier *Username* et *Password*.
+2. Dans votre `.env` :
+
+```env
+MAIL_MAILER=smtp
+MAIL_HOST=sandbox.smtp.mailtrap.io
+MAIL_PORT=2525
+MAIL_USERNAME=<username Mailtrap>
+MAIL_PASSWORD=<password Mailtrap>
+```
+
+3. `php artisan config:clear`. Les e-mails (reset, vérification) arrivent dans la boîte Mailtrap.
+
+Sans compte Mailtrap, laisser `MAIL_MAILER=log` : les e-mails sont écrits dans `storage/logs/laravel.log`.
+
+---
+
 ## DevOps : pipeline CI/CD
 
 Le pipeline [`.github/workflows/ci-cd.yml`](.github/workflows/ci-cd.yml) (GitHub Actions) se lance tout seul :
@@ -173,4 +207,4 @@ docker run -p 8080:8080 -e APP_KEY="$(php artisan key:generate --show)" heataler
 |---|---|
 | GitHub → Settings → Secrets and variables → Actions → **Secrets** | `RENDER_DEPLOY_HOOK_URL` : le *Deploy Hook* du service Render |
 | GitHub → Settings → Secrets and variables → Actions → **Variables** | `APP_URL` : l'adresse du site (ex. `https://heatalert.onrender.com`) |
-| Render → service → Environment | `APP_KEY` (généré par `php artisan key:generate --show`), `APP_URL` |
+| Render → service → Environment | `APP_KEY` (généré par `php artisan key:generate --show`), `APP_URL`, et pour les e-mails `MAIL_MAILER=smtp`, `MAIL_HOST`, `MAIL_PORT`, `MAIL_USERNAME`, `MAIL_PASSWORD` (Mailtrap) |
